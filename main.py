@@ -9,11 +9,11 @@ companyDevelopers = []
 managersBonus = []
 
 for i in range(H):
-    plan.append(width)
+    plan.append([])
 for i in range(H):
     line = data.readline()
     for j in range(W):
-        plan[i][j] = line[j]
+        plan[i].append(line[j])
 
 numDevelopers = int(data.readline())
 developers = []
