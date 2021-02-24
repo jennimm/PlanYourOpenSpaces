@@ -44,6 +44,7 @@ for i in range(numManagers):
 managersBonus.sort(key= lambda x:x[1])
 managersBonus.reverse()
 print(managers)
+print(plan)
 data.close()
 
 
