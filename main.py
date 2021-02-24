@@ -63,9 +63,16 @@ def workPotential(dev1, dev2):
     return wp*(distinct-wp)
 
 def bonusPotential(dev1,dev2):
+<<<<<<< HEAD
     if dev1[1] ==dev2[1]:
         return dev1[2]*dev2[2]
     return 0
+=======
+    if dev1[1] == dev2[1]:
+        return int(dev1[2])*int(dev2[2])
+    else:
+        return 0
+>>>>>>> a953c885c9fb0e065c1774f2bfc7780ddcd6d710
 
 def totalPotential(dev1, dev2):
     return workPotential(dev1, dev2) + bonusPotential(dev1, dev2)
@@ -97,16 +104,34 @@ def managerScore(managers):
 
 print(managerScore(managers))
 
-# def finingAdjseats(plan):
-#     seatnum=[]
-#     for a in range(len(plan)):
-#         for b in range(len(plan[a])):
-#             if plan [a][b] == '_':
-#                 coordval=[]
-#                 ajval=0
-#                 coordval.append(a)
-#                 coordval.append(b)
-                # if plan[a-1][b] == '':
+
+def developerScores(developers, numDevelopers):
+    scores = []
+    for i in range(numDevelopers):
+        scores.append([])
+        for j in range(numDevelopers):
+            if j == i:
+                scores[i].append(0)
+            elif j < i:
+                scores[i].append(scores[j][i])
+            else:
+                scores[i].append(totalPotential(developers[i], developers[j]))
+                
+    for i in range(len(scores)):
+        print(scores[i])
+
+developerScores(developers, numDevelopers)
 
 
+print(totalPotential(developers[0],developers[2]))
+def finingAdjseats(plan):
+    seatnum=[]
+    for a in range(len(plan)):
+        for b in range(len(plan[a])):
+            if plan [a][b] == '_':
+                coordval=[]
+                ajval=0
+                coordval.append(a)
+                coordval.append(b)
+         #       if plan[a-1][b] == '':
 
