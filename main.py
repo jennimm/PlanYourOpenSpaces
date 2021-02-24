@@ -21,6 +21,7 @@ for i in range(numDevelopers):
     developer = []
     line = data.readline().split()
     numSkills = int(line[2])
+    developer.append(i)
     developer.append(line[0])
     if line[0] not in companies:
         companies.append(line[0])
