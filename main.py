@@ -42,7 +42,12 @@ for i in range(numManagers):
     managersBonus.append(line)
 managersBonus.sort(key= lambda x:x[1])
 managersBonus.reverse()
+<<<<<<< HEAD
 # print(managers)
+=======
+print(managers)
+print(plan)
+>>>>>>> f570cdbd77ee509d37141e2a30ceac3225b65c68
 data.close()
 
 def workPotential(dev1, dev2):
