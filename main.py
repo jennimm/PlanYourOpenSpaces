@@ -17,10 +17,9 @@ for i in range(numDevelopers):
     developer = []
     line = data.readline().split()
     numSkills = int(line[2])
-    skills = line[3:]
     developer.append(line[0])
     developer.append(line[1])
-    developer.append(skills)
+    developer.append(line[3:])
     developers.append(developer)
 print(developers)
 
