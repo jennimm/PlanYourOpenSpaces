@@ -3,7 +3,6 @@ W,H = data.readline().split()
 W = int(W)
 H = int(H)
 plan = []
-width = [0]*W
 companies = []
 companyDevelopers = []
 managersBonus = []
@@ -31,8 +30,8 @@ for i in range(numDevelopers):
     developers.append(developer)
     index = companies.index(line[0])
     companyDevelopers[index].append(developer)
-print(companyDevelopers)
-print(developers)
+# print(companyDevelopers)
+# print(developers)
 
 numManagers = int(data.readline())
 managers = []
@@ -43,7 +42,24 @@ for i in range(numManagers):
     managersBonus.append(line)
 managersBonus.sort(key= lambda x:x[1])
 managersBonus.reverse()
-print(managers)
+# print(managers)
 data.close()
 
+def workPotential(dev1, dev2):
+    skills1 = dev1[3]
+    skills2 = dev2[3]
+    wp = 0
+    distinct = 0
+    for i in skills1:
+        for j in skills2:
+            if i == j:
+                wp+=1
+            else:
+                distinct+=1
+    return wp*(distinct-wp)
 
+def bonusPotential(dev1,dev2):
+    if dev1[1] == dev2[1]:
+        return int(dev1[2])*int(dev2[2])
+
+print(bonusPotential(developers[0],developers[2]))
