@@ -59,6 +59,7 @@ def workPotential(dev1, dev2):
                 distinct+=1
     return wp*(distinct-wp)
 
+<<<<<<< Updated upstream
 def bonusPotential(dev1,dev2):
     if dev1[1] == dev2[1]:
         return int(dev1[2])*int(dev2[2])
@@ -67,3 +68,18 @@ def totalPotential(dev1, dev2):
     return workPotential(dev1, dev2) + bonusPotential(dev1, dev2)
 
 print(totalPotential(developers[0],developers[2]))
+=======
+def finingAdjseats(plan):
+    seatnum=[]
+    for a in range(len(plan)):
+        for b in range(len(plan[a])):
+            if plan [a][b] == '_':
+                coordval=[]
+                ajval=0
+                coordval.append(a)
+                coordval.append(b)
+                if plan[a-1][b] == '':
+
+
+
+>>>>>>> Stashed changes
