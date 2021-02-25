@@ -87,7 +87,7 @@ developerScores(developers, numDevelopers)
 
 
 print(totalPotential(developers[0],developers[2]))
-def finingAdjseats(plan):
+def findingAdjseats(plan):
     seatnum=[]
     for a in range(len(plan)):
         for b in range(len(plan[a])):
@@ -96,5 +96,40 @@ def finingAdjseats(plan):
                 ajval=0
                 coordval.append(a)
                 coordval.append(b)
-         #       if plan[a-1][b] == '':
+                print(len(plan[a]))
+                if a == (len(plan)-1) and b == (len(plan[a])-1) :
+                    if plan[a-1][b] == '_' :
+                        ajval+=1
+                    if plan[a][b-1] == '_':
+                        ajval+=1
+                elif a < (len(plan)-1) and b == (len(plan[a])-1) :
+                    if plan[a-1][b] == '_' :
+                        ajval+=1
+                    if plan[a][b-1] == '_':
+                        ajval+=1
+                    if plan[a+1][b] == '_':
+                        ajval+=1
+                elif a == (len(plan)-1) and b < (len(plan[a])-1) :
+                    if plan[a-1][b] == '_' :
+                        ajval+=1
+                    if plan[a][b-1] == '_':
+                        ajval+=1
+                    if plan[a][b+1] == '_':
+                        ajval+=1
+                else:
+                    if plan[a-1][b] == '_' :
+                        ajval+=1
+                    if plan[a][b-1] == '_':
+                        ajval+=1
+                    if plan[a][b+1] == '_':
+                        ajval+=1
+                    if plan[a+1][b] == '_':
+                        ajval+=1
+                coordval.append(ajval)
+                seatnum.append(coordval)
+    return seatnum
+print('seats')
+print(findingAdjseats(plan))
+
+                
 
