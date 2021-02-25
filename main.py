@@ -25,7 +25,7 @@ for i in range(numDevelopers):
     if line[0] not in companies:
         companies.append(line[0])
         companyDevelopers.append([])
-    developer.append(line[1])
+    developer.append(int(line[1]))
     developer.append(line[3:])
     developers.append(developer)
     index = companies.index(line[0])
@@ -37,8 +37,11 @@ numManagers = int(data.readline())
 managers = []
 for i in range(numManagers):
     line = data.readline().split()
-    line[-1] = int(line[-1])
-    managers.append(line)
+    details = []
+    details.append(i)
+    details.append(line[0])
+    details.append(int(line[1]))
+    managers.append(details)
     managersBonus.append(line)
 managersBonus.sort(key= lambda x:x[1])
 managersBonus.reverse()
@@ -60,13 +63,47 @@ def workPotential(dev1, dev2):
     return wp*(distinct-wp)
 
 def bonusPotential(dev1,dev2):
+<<<<<<< HEAD
+    if dev1[1] ==dev2[1]:
+        return dev1[2]*dev2[2]
+    return 0
+=======
     if dev1[1] == dev2[1]:
         return int(dev1[2])*int(dev2[2])
     else:
         return 0
+>>>>>>> a953c885c9fb0e065c1774f2bfc7780ddcd6d710
 
 def totalPotential(dev1, dev2):
     return workPotential(dev1, dev2) + bonusPotential(dev1, dev2)
+
+def managerScore(managers):
+    # probably needs to be redone :/
+    scores = []
+    for managerProfile in managers:
+        managerScores = []
+        developerArray = []
+        managerArray = []
+        for person in developers:
+            devScore= [person[0]]
+            devScore.append(bonusPotential(managerProfile,person))
+            developerArray.append(devScore)
+        for person in managers:
+            # includes all managers (including itself)
+            manScoreArr = [person[0]]
+            if person != managerProfile:
+                manScoreArr.append(bonusPotential(managerProfile,person))
+            else:
+                manScoreArr.append(0)
+            managerArray.append(manScoreArr)
+        managerScores.append(developerArray)
+        managerScores.append(managerArray)
+        scores.append(managerScores)
+    return scores
+    # first array = first manager - first part of this array is scores w developers, second part is scores w managers
+
+print(managerScore(managers))
+
 
 def developerScores(developers, numDevelopers):
     scores = []
