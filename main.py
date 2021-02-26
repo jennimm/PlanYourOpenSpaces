@@ -45,8 +45,8 @@ for i in range(numManagers):
     managersBonus.append(line)
 managersBonus.sort(key= lambda x:x[1])
 managersBonus.reverse()
-print(managers)
-print(plan)
+# print(managers)
+# print(plan)
 data.close()
 
 def workPotential(dev1, dev2):
@@ -96,7 +96,7 @@ def managerScore(managers):
     return scores
     # first array = first manager - first part of this array is scores w developers, second part is scores w managers
 
-print(managerScore(managers))
+# print(managerScore(managers))
 
 def developerScores(developers, numDevelopers):
     scores = []
@@ -109,9 +109,6 @@ def developerScores(developers, numDevelopers):
                 scores[i].append(scores[j][i])
             else:
                 scores[i].append(totalPotential(developers[i], developers[j]))
-                
-    for i in range(len(scores)):
-        print(scores[i])
     return scores
 
 developerScores(developers, numDevelopers)
@@ -122,6 +119,7 @@ def greatestCompanyScores():
     developerScoresArray = developerScores(developers, numDevelopers)
     for i in range(len(developerScoresArray)):
         if sum(developerScoresArray[i]) > greatest:
+            greatest = sum(developerScoresArray[i])
             index = i  
     return index   
 
