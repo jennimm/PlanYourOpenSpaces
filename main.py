@@ -177,7 +177,7 @@ def highestScoringPair(scores):
 
 
 
-def solutionFinder(plan, scores):
+def solutionFinder(plan, scores, W, H):
     seatsArray = findingAdjseats(plan)
     highestSpacesAv = seatsArray[0]
     for i in range(len(seatsArray)):
@@ -191,19 +191,21 @@ def solutionFinder(plan, scores):
         plan[highestSpacesAv[0]][highestSpacesAv[1]] = "*"
         companyDevelopers[developerId] = [highestSpacesAv[0], highestSpacesAv[1]]
 
-        if plan[highestSpacesAv[0]][highestSpacesAv[1]+1] == "_":
+
+        if highestSpacesAv[1]+1 < W and plan[highestSpacesAv[0]][highestSpacesAv[1]+1] == "_":
             plan[highestSpacesAv[0]][highestSpacesAv[1]+1] = "*"
             companyDevelopers[developerId] = [highestSpacesAv[0], highestSpacesAv[1]+1]
-        elif plan[highestSpacesAv[0]][highestSpacesAv[1]-1] == "_":
+        elif W-highestSpacesAv[1]-1 >= 0 and plan[highestSpacesAv[0]][highestSpacesAv[1]-1] == "_":
             plan[highestSpacesAv[0]][highestSpacesAv[1]-1] = "*"
             companyDevelopers[developerId] = [highestSpacesAv[0], highestSpacesAv[1]-1]
-        elif plan[highestSpacesAv[0]+1][highestSpacesAv[1]] == "_":
+        elif highestSpacesAv[0]+1 < H and plan[highestSpacesAv[0]+1][highestSpacesAv[1]] == "_":
             plan[highestSpacesAv[0]+1][highestSpacesAv[1]] = "*"
             companyDevelopers[developerId] = [highestSpacesAv[0]+1, highestSpacesAv[1]]
         else:
-            plan[highestSpacesAv[0]-1][highestSpacesAv[1]] = "*"
-            companyDevelopers[developerId] = [highestSpacesAv[0]-1, highestSpacesAv[1]]
+            if H-highestSpacesAv[0]-1 >=0:
+                plan[highestSpacesAv[0]-1][highestSpacesAv[1]] = "*"
+                companyDevelopers[developerId] = [highestSpacesAv[0]-1, highestSpacesAv[1]]
         highestSpacesAv[-1] -= 1
+    print(plan)
 
-
-solutionFinder(plan, developerScores)
+solutionFinder(plan, developerScores, W, H)
