@@ -30,7 +30,7 @@ for i in range(numDevelopers):
     developers.append(developer)
     index = companies.index(line[0])
     companyDevelopers[index].append(developer)
-# print(companyDevelopers)
+print(companyDevelopers, "DEVELOPERS")
 # print(developers)
 
 numManagers = int(data.readline())
@@ -45,8 +45,8 @@ for i in range(numManagers):
     managersBonus.append(line)
 managersBonus.sort(key= lambda x:x[1])
 managersBonus.reverse()
-# print(managers)
-# print(plan)
+print(managers)
+print(plan)
 data.close()
 
 def workPotential(dev1, dev2):
@@ -96,7 +96,7 @@ def managerScore(managers):
     return scores
     # first array = first manager - first part of this array is scores w developers, second part is scores w managers
 
-# print(managerScore(managers))
+print(managerScore(managers))
 
 def developerScores(developers, numDevelopers):
     scores = []
@@ -111,19 +111,17 @@ def developerScores(developers, numDevelopers):
                 scores[i].append(totalPotential(developers[i], developers[j]))
     return scores
 
-developerScores(developers, numDevelopers)
+developerScores = developerScores(developers, numDevelopers)
 
-def greatestCompanyScores():
+def greatestDeveloperScores(developerScoresArray, ids):
     greatest = 0
     index = 0
-    developerScoresArray = developerScores(developers, numDevelopers)
-    for i in range(len(developerScoresArray)):
+    for i in range(len(ids)):
         if sum(developerScoresArray[i]) > greatest:
-            greatest = sum(developerScoresArray[i])
             index = i  
-    return index   
-
-print(greatestCompanyScores())
+    developerScoresArray[ids[0]][ids[1]] = 0
+    developerScoresArray[ids[1]][ids[0]] = 0
+    return index, developerScoresArray  
 
 def findingAdjseats(plan):
     seatnum=[]
@@ -166,5 +164,46 @@ def findingAdjseats(plan):
                 coordval.append(ajval)
                 seatnum.append(coordval)
     return seatnum
-# print('seats')
-# print(findingAdjseats(plan))
+
+def highestScoringPair(scores):
+    highScore = 0
+    index =[0,0]
+    for x in range(len(scores)):
+        for y in range(len(scores[0])):
+            if scores[x][y] > highScore:
+                highScore = scores[x][y]
+                index = [x,y]
+    return index
+
+
+
+def solutionFinder(plan, scores):
+    seatsArray = findingAdjseats(plan)
+    highestSpacesAv = seatsArray[0]
+    for i in range(len(seatsArray)):
+        if seatsArray[i][-1] > highestSpacesAv[-1]:
+            highestSpacesAv = seatsArray[i]
+
+    while highestSpacesAv[-1] > 0:
+        bestDevelopers = highestScoringPair(scores)
+        developerId, scores = greatestDeveloperScores(scores, bestDevelopers)
+
+        plan[highestSpacesAv[0]][highestSpacesAv[1]] = "*"
+        companyDevelopers[developerId] = [highestSpacesAv[0], highestSpacesAv[1]]
+
+        if plan[highestSpacesAv[0]][highestSpacesAv[1]+1] == "_":
+            plan[highestSpacesAv[0]][highestSpacesAv[1]+1] = "*"
+            companyDevelopers[developerId] = [highestSpacesAv[0], highestSpacesAv[1]+1]
+        elif plan[highestSpacesAv[0]][highestSpacesAv[1]-1] == "_":
+            plan[highestSpacesAv[0]][highestSpacesAv[1]-1] = "*"
+            companyDevelopers[developerId] = [highestSpacesAv[0], highestSpacesAv[1]-1]
+        elif plan[highestSpacesAv[0]+1][highestSpacesAv[1]] == "_":
+            plan[highestSpacesAv[0]+1][highestSpacesAv[1]] = "*"
+            companyDevelopers[developerId] = [highestSpacesAv[0]+1, highestSpacesAv[1]]
+        else:
+            plan[highestSpacesAv[0]-1][highestSpacesAv[1]] = "*"
+            companyDevelopers[developerId] = [highestSpacesAv[0]-1, highestSpacesAv[1]]
+        highestSpacesAv[-1] -= 1
+
+
+solutionFinder(plan, developerScores)
