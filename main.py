@@ -1,4 +1,5 @@
-data = open('a_solar.txt','r')
+filename = 'a_solar'
+data = open(filename+'.txt','r')
 W,H = data.readline().split()
 W = int(W)
 H = int(H)
@@ -30,8 +31,6 @@ for i in range(numDevelopers):
     developers.append(developer)
     index = companies.index(line[0])
     companyDevelopers[index].append(developer)
-print(companyDevelopers, "DEVELOPERS")
-# print(developers)
 
 numManagers = int(data.readline())
 managers = []
@@ -45,8 +44,7 @@ for i in range(numManagers):
     managersBonus.append(line)
 managersBonus.sort(key= lambda x:x[1])
 managersBonus.reverse()
-print(managers)
-print(plan)
+
 data.close()
 
 def workPotential(dev1, dev2):
@@ -71,8 +69,7 @@ def bonusPotential(dev1,dev2):
 def totalPotential(dev1, dev2):
     return workPotential(dev1, dev2) + bonusPotential(dev1, dev2)
 
-def managerScore(managers):
-    # probably needs to be redone :/
+def managerScore(managers, developers):
     scores = []
     for managerProfile in managers:
         managerScores = []
@@ -96,7 +93,6 @@ def managerScore(managers):
     return scores
     # first array = first manager - first part of this array is scores w developers, second part is scores w managers
 
-print(managerScore(managers))
 
 def developerScores(developers, numDevelopers):
     scores = []
@@ -111,55 +107,55 @@ def developerScores(developers, numDevelopers):
                 scores[i].append(totalPotential(developers[i], developers[j]))
     return scores
 
-developerScores = developerScores(developers, numDevelopers)
-
 def greatestDeveloperScores(developerScoresArray, ids):
     greatest = 0
-    index = 0
-    for i in range(len(ids)):
+    index=0
+    for i in ids:
         if sum(developerScoresArray[i]) > greatest:
+            greatest = sum(developerScoresArray[i])
             index = i  
-    developerScoresArray[ids[0]][ids[1]] = 0
-    developerScoresArray[ids[1]][ids[0]] = 0
+    if index == ids[0]:
+        developerScoresArray[ids[1]][ids[0]] = 0
+    else:
+        developerScoresArray[ids[0]][ids[1]] = 0
     return index, developerScoresArray  
 
-def findingAdjseats(plan):
+def findingAdjseats(plan, char):
     seatnum=[]
     for a in range(len(plan)):
         for b in range(len(plan[a])):
-            if plan [a][b] == '_':
+            if plan [a][b] == char:
                 coordval=[]
                 ajval=0
                 coordval.append(a)
                 coordval.append(b)
-                # print(len(plan[a]))
                 if a == (len(plan)-1) and b == (len(plan[a])-1) :
-                    if plan[a-1][b] == '_' :
+                    if plan[a-1][b] == char :
                         ajval+=1
-                    if plan[a][b-1] == '_':
+                    if plan[a][b-1] == char:
                         ajval+=1
                 elif a < (len(plan)-1) and b == (len(plan[a])-1) :
-                    if plan[a-1][b] == '_' :
+                    if plan[a-1][b] == char :
                         ajval+=1
-                    if plan[a][b-1] == '_':
+                    if plan[a][b-1] == char:
                         ajval+=1
-                    if plan[a+1][b] == '_':
+                    if plan[a+1][b] == char:
                         ajval+=1
                 elif a == (len(plan)-1) and b < (len(plan[a])-1) :
-                    if plan[a-1][b] == '_' :
+                    if plan[a-1][b] == char :
                         ajval+=1
-                    if plan[a][b-1] == '_':
+                    if plan[a][b-1] == char:
                         ajval+=1
-                    if plan[a][b+1] == '_':
+                    if plan[a][b+1] == char:
                         ajval+=1
                 else:
-                    if plan[a-1][b] == '_' :
+                    if plan[a-1][b] == char :
                         ajval+=1
-                    if plan[a][b-1] == '_':
+                    if plan[a][b-1] == char:
                         ajval+=1
-                    if plan[a][b+1] == '_':
+                    if plan[a][b+1] == char:
                         ajval+=1
-                    if plan[a+1][b] == '_':
+                    if plan[a+1][b] == char:
                         ajval+=1
                 coordval.append(ajval)
                 seatnum.append(coordval)
@@ -173,67 +169,68 @@ def highestScoringPair(scores):
             if scores[x][y] > highScore:
                 highScore = scores[x][y]
                 index = [x,y]
+    
     return index
 
-
+def getHighest(developer, scores):
+    sortedScores = []
+    developerScores = scores[developer].copy()
+    while len(developerScores) > len(sortedScores):
+        maxScore = max(developerScores)
+        index = developerScores.index(maxScore)
+        if index != developer:
+            sortedScores.append(index)
+        developerScores[index] = -1
+    return sortedScores
 
 def solutionFinder(plan, scores, W, H):
-    seatsArray = findingAdjseats(plan)
+    seatsArray = findingAdjseats(plan,'_')
     if len(seatsArray) == 0:
-        return companyDevelopers
+        return developers
     else: 
         highestSpacesAv = seatsArray[0]
         for i in range(len(seatsArray)):
             if seatsArray[i][-1] > highestSpacesAv[-1]:
                 highestSpacesAv = seatsArray[i]
-
-        while highestSpacesAv[-1] >= 0:
-            bestDevelopers = highestScoringPair(scores)
-            developerId, scores = greatestDeveloperScores(scores, bestDevelopers)
-
-            plan[highestSpacesAv[0]][highestSpacesAv[1]] = "*"
-            companyDevelopers[developerId] = [highestSpacesAv[0], highestSpacesAv[1]]
-
-
+        
+        bestDevelopers = highestScoringPair(scores)
+        developerId, scores = greatestDeveloperScores(scores, bestDevelopers)
+        plan[highestSpacesAv[0]][highestSpacesAv[1]] = developerId
+        developers[developerId] = [highestSpacesAv[0], highestSpacesAv[1]]
+        while highestSpacesAv[-1] > 0:  
+            sortedScores = getHighest(developerId, scores)
+            nextBest = sortedScores[0]
+            scores[developerId][nextBest] = 0
             if highestSpacesAv[1]+1 < W and plan[highestSpacesAv[0]][highestSpacesAv[1]+1] == "_":
-                plan[highestSpacesAv[0]][highestSpacesAv[1]+1] = "*"
-                for i in range(len(companyDevelopers)):
-                        for j in range(len(companyDevelopers[i])):
-                            try:
-                                if companyDevelopers[i][j][0] == developerId:
-                                    companyDevelopers[i][j] = [highestSpacesAv[0], highestSpacesAv[1]+1]
-                            except:
-                                None
+                plan[highestSpacesAv[0]][highestSpacesAv[1]+1] = nextBest
+                developers[nextBest] = [highestSpacesAv[0], highestSpacesAv[1]+1]
+
             elif W-highestSpacesAv[1]-1 >= 0 and plan[highestSpacesAv[0]][highestSpacesAv[1]-1] == "_":
-                plan[highestSpacesAv[0]][highestSpacesAv[1]-1] = "*"
-                for i in range(len(companyDevelopers)):
-                        for j in range(len(companyDevelopers[i])):
-                            try:
-                                if developerId in companyDevelopers[i][j]:
-                                    companyDevelopers[i][j] = [highestSpacesAv[0], highestSpacesAv[1]-1]
-                            except:
-                                None       
+                plan[highestSpacesAv[0]][highestSpacesAv[1]-1] = nextBest
+                developers[nextBest] = [highestSpacesAv[0], highestSpacesAv[1]-1]
+
             elif highestSpacesAv[0]+1 < H and plan[highestSpacesAv[0]+1][highestSpacesAv[1]] == "_":
-                plan[highestSpacesAv[0]+1][highestSpacesAv[1]] = "*"
-                for i in range(len(companyDevelopers)):
-                        for j in range(len(companyDevelopers[i])):
-                            try:
-                                if developerId in companyDevelopers[i][j]:
-                                    companyDevelopers[i][j] = [highestSpacesAv[0]+1, highestSpacesAv[1]]
-                            except:
-                                None
+                plan[highestSpacesAv[0]+1][highestSpacesAv[1]] = nextBest
+                developers[nextBest] = [highestSpacesAv[0]+1, highestSpacesAv[1]]
+              
             else:
                 if H-highestSpacesAv[0]-1 >=0:
-                    plan[highestSpacesAv[0]-1][highestSpacesAv[1]] = "*"
-                    for i in range(len(companyDevelopers)):
-                        for j in range(len(companyDevelopers[i])):
-                            try:
-                                if developerId in companyDevelopers[i][j]:
-                                    companyDevelopers[i][j]= [highestSpacesAv[0]-1, highestSpacesAv[1]]
-                            except:
-                                None
+                    plan[highestSpacesAv[0]-1][highestSpacesAv[1]] = nextBest
+                    developers[nextBest] = [highestSpacesAv[0]-1, highestSpacesAv[1]]
+            
             highestSpacesAv[-1] -= 1
         return solutionFinder(plan, scores, W, H)
 
 
-print(solutionFinder(plan, developerScores, W, H))
+    
+developerScores = developerScores(developers, numDevelopers)
+solutions = solutionFinder(plan, developerScores, W, H)
+fileOutput = []
+for i in solutions:
+    if len(i) > 2:
+        fileOutput.append('X\n')
+    else:
+        fileOutput.append(str(i[0])+" "+str(i[1])+"\n")
+outputfile = open(filename+'OUT.txt',"a")
+outputfile.writelines(fileOutput)
+outputfile.close()
