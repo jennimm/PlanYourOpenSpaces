@@ -120,6 +120,22 @@ def greatestDeveloperScores(developerScoresArray, ids):
         developerScoresArray[ids[0]][ids[1]] = 0
     return index, developerScoresArray  
 
+def greatestManagerScores(managers, developers, managerScoresArray):
+    greatest = 0
+    index=0
+    for i in range(len(managers)):
+        for x in range(len(managerScoresArray[i][0])):
+            if managerScoresArray[i][0][x][1] > greatest:
+                greatest = managerScoresArray[i][0][x][1]
+                index = i  
+        for y in range(len(managerScoresArray[i][1])):
+            if managerScoresArray[i][1][y][1] > greatest:
+                greatest = managerScoresArray[i][1][y][1]
+                index = i 
+
+    managerScoresArray[index][1] = 0
+    return index, managerScoresArray
+
 def findingAdjseats(plan, char):
     seatnum=[]
     for a in range(len(plan)):
@@ -220,11 +236,14 @@ def solutionFinder(plan, scores, W, H):
             
             highestSpacesAv[-1] -= 1
         return solutionFinder(plan, scores, W, H)
-
-
     
 developerScores = developerScores(developers, numDevelopers)
 solutions = solutionFinder(plan, developerScores, W, H)
+for x in range(2):
+    managerScoresArray = managerScore(managers, developers)
+    manager, managers = greatestManagerScores(managers, developers, managerScoresArray)
+    plan[-1][x+1] = manager
+    
 fileOutput = []
 for i in solutions:
     if len(i) > 2:
